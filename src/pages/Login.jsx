@@ -26,7 +26,7 @@ export default function Login(){
 	 return (
     <div className="login-signup-form animated fadeInDown">
             <div className="form">
-      {error && <p style={{ color: 'red' }}>{error}</p>}
+      {error && <p className="title" style={{ color: 'red' }}>{error}</p>}
       <form onSubmit={handleLogin}>
 		<h1 className="title">
 			Login

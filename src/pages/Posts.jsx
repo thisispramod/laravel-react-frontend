@@ -6,7 +6,7 @@ export default function Posts(){
 	const [posts, setPosts] = useState([])
 	const [error, setError] = useState('')
 	const navigate = useNavigate()
-
+	const token = localStorage.getItem('token')
 	useEffect(() => {
 		const fetchPosts = async () => {
 			const token = localStorage.getItem('token')
@@ -31,19 +31,40 @@ export default function Posts(){
 			}
 		}
 		fetchPosts()
-	},[])
+	}, [])
+	const handleLogout = async () => {
+		try {
+			await axios.post(
+				'http://localhost:8000/api/logout',
+				{},
+				{
+					headers: {
+						Authorization: `Bearer ${token}` //  Same token sent to logout
+					}
+				}
+			)
+			localStorage.removeItem('token') // clear token 
+			navigate('/login')  // redirect to login page 
+		} catch(err) {
+			console.error('logout failed : ', err)
+		}
+	}
 	return (
-    <div style={{ padding: '2rem' }}>
-      <h2>All Posts</h2>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-      <ul>
-        {posts.map(post => (
-          <li key={post.id}>
-            <strong>{post.title}</strong><br />
-            {post.content}
-          </li>
-        ))}
-      </ul>
-    </div>
+		<div style={{ padding: '2rem' }}>
+			<div style={{ display: 'flex', justifyContent: 'space-between' }}>
+				<h2>All Posts</h2>
+				<button onClick={handleLogout} className="btn-logout" >Logout</button>
+			</div>
+		{error && <p style={{ color: 'red' }}>{error}
+			</p>}
+		<ul>
+			{posts.map(post => (
+			<li key={post.id}>
+				<strong>{post.title}</strong><br />
+				{post.content}
+			</li>
+			))}
+		</ul>
+	</div>
   )
 }
