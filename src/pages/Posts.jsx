@@ -51,20 +51,48 @@ export default function Posts(){
 	}
 	return (
 		<div style={{ padding: '2rem' }}>
-			<div style={{ display: 'flex', justifyContent: 'space-between' }}>
-				<h2>All Posts</h2>
-				<button onClick={handleLogout} className="btn-logout" >Logout</button>
-			</div>
+			<div
+  style={{
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: '1rem',
+    marginBottom: '1rem',
+    backgroundColor: '#f9f9f9',
+    borderRadius: '8px',
+    boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)'
+  }}
+>
+  <h2 style={{ margin: 0 }}>All Posts</h2>
+  <button
+    onClick={handleLogout}
+    className="btn-logout"
+  >
+    Logout
+  </button>
+</div>
+
 		{error && <p style={{ color: 'red' }}>{error}
 			</p>}
-		<ul>
-			{posts.map(post => (
-			<li key={post.id}>
-				<strong>{post.title}</strong><br />
-				{post.content}
-			</li>
-			))}
-		</ul>
+		<div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem' }}>
+		{posts.map(post => (
+			<div
+			key={post.id}
+			style={{
+				border: '1px solid #ccc',
+				borderRadius: '8px',
+				padding: '1rem',
+				width: '300px',
+				boxShadow: '0 2px 5px rgba(0,0,0,0.1)',
+				backgroundColor: '#fff'
+			}}
+			>
+			<h3 style={{ margin: '0 0 0.5rem 0' }}>{post.title}</h3>
+			<p style={{ margin: 0 }}>{post.body}</p>
+			</div>
+		))}
+		</div>
+
 	</div>
   )
 }
