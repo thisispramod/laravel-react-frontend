@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import axios from "axios"
-import { useNavigate } from "react-router-dom"
+import { Link,useNavigate } from "react-router-dom"
 
 export default function Posts(){
 	const [posts, setPosts] = useState([])
@@ -64,6 +64,12 @@ export default function Posts(){
   }}
 >
   <h2 style={{ margin: 0 }}>All Posts</h2>
+  <Link to="/CreatePost">
+  <button   
+    className="btn-add"
+  >
+    Add Post
+  </button></Link> 
   <button
     onClick={handleLogout}
     className="btn-logout"

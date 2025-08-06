@@ -40,7 +40,7 @@ const CreatePost = ({ token }) => {
         try {
             await axios.post('http://localhost:8000/api/posts', {
                 ...formData,
-                user_id: 1 // ⚠️ Replace with actual logged-in user ID (if available)
+                user_id: 1 // 
             }, {
                 headers: {
                     Authorization: `Bearer ${token}`
@@ -54,31 +54,52 @@ const CreatePost = ({ token }) => {
     };
 
     return (
-        <div>
-            <h2>Create Post</h2>
-            <form onSubmit={handleSubmit}>
-                <input name="title" placeholder="Title" onChange={handleChange} required />
-                <textarea name="body" placeholder="Body" onChange={handleChange} required />
+  <div className="form-container">
+    <h2>Create New Post</h2>
+    <form onSubmit={handleSubmit}>
+      <div>
+        <label>Title</label>
+        <input name="title" placeholder="Enter title" onChange={handleChange} required />
+      </div>
 
-                <select name="category_id" onChange={handleChange} required>
-                    <option value="">-- Select Category --</option>
-                    {categories.map(cat => (
-                        <option key={cat.id} value={cat.id}>{cat.name}</option>
-                    ))}
-                </select>
+      <div>
+        <label>Body</label>
+        <textarea name="body" placeholder="Enter body" onChange={handleChange} required />
+      </div>
 
-                <input name="meta_title" placeholder="Meta Title" onChange={handleChange} />
-                <input name="meta_description" placeholder="Meta Description" onChange={handleChange} />
-                
-                <select name="status" onChange={handleChange}>
-                    <option value="draft">Draft</option>
-                    <option value="published">Published</option>
-                </select>
+      <div>
+        <label>Category</label>
+        <select name="category_id" onChange={handleChange} required>
+          <option value="">-- Select Category --</option>
+          {categories.map(cat => (
+            <option key={cat.id} value={cat.id}>{cat.name}</option>
+          ))}
+        </select>
+      </div>
 
-                <button type="submit">Create</button>
-            </form>
-        </div>
-    );
+      <div>
+        <label>Meta Title</label>
+        <input name="meta_title" placeholder="SEO Meta Title" onChange={handleChange} />
+      </div>
+
+      <div>
+        <label>Meta Description</label>
+        <input name="meta_description" placeholder="SEO Meta Description" onChange={handleChange} />
+      </div>
+
+      <div>
+        <label>Status</label>
+        <select name="status" onChange={handleChange}>
+          <option value="draft">Draft</option>
+          <option value="published">Published</option>
+        </select>
+      </div>
+
+      <button type="submit">Create Post</button>
+    </form>
+  </div>
+);
+
 };
 
 export default CreatePost;

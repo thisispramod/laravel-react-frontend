@@ -19,7 +19,7 @@ export default function Register(){
             })
             const token = response.data.token 
             localStorage.setItem('token', token)
-            navigate('/posts')
+            navigate('/dashboard')
         }catch (err){
             console.error(err)
             setError(err.response?.data?.message || 'Registration failed')
