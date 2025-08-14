@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import CreateCategory from './CreateCategory';
-import { Link } from 'react-router-dom';
+import axios from 'axios'; 
 const Dashboard = () => {
-  const token = localStorage.getItem('token');
+  const token = localStorage.getItem('token'); 
   const [categories, setCategories] = useState([]);
   const [totalPosts, setTotalPosts] = useState(0);
   const [totalUsers, setTotalUsers] = useState(0);
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [newCategoryName, setNewCategoryName] = useState("");
+  const [editCategory, setEditCategory] = useState({ id: "", name: "" }); 
 
   const fetchAll = async () => {
     try {
@@ -25,14 +27,66 @@ const Dashboard = () => {
   };
 
   useEffect(() => {
-    fetchAll();
+     fetchCategories();
   }, []);
+  
+    const fetchCategories = async () => {
+    const token = localStorage.getItem("token");
+    const response = await axios.get("http://localhost:8000/api/categories", {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    setCategories(response.data);
+  };
 
+  const handleAddCategory = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      await axios.post(
+        "http://localhost:8000/api/categories",
+        { name: newCategoryName },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      setShowAddModal(false);
+      setNewCategoryName("");
+      fetchCategories();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+    const handleUpdateCategory = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      await axios.put(
+        `http://localhost:8000/api/categories/${editCategory.id}`,
+        { name: editCategory.name },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      setShowEditModal(false);
+      fetchCategories();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  
+const handleDeleteCategory = async (id) => {
+  const cnf = window.confirm("Are You Sure Want To Delete?");
+  if(cnf){
+  try {
+    const token = localStorage.getItem("token");
+    await axios.delete(
+      `http://localhost:8000/api/categories/${id}`,
+      { headers: { Authorization: `Bearer ${token}` } }
+    ); 
+    fetchCategories();
+  } catch (error) {
+    console.error(error);
+  }
+}
+};
   return (
-    <div className="dashboard-container">
-        <Link to="/CreateCategory">
-  <button className="btn">+ New Category</button>
-</Link>
+    <div className="dashboard-container"> 
+ <button onClick={() => setShowAddModal(true)} className='btn-add'>+Add Category</button>
       <h2>Dashboard</h2>
       <div className="stats">
         <div className="stat-box">📄 Posts: {totalPosts}</div>
@@ -48,6 +102,7 @@ const Dashboard = () => {
             <th>#</th>
             <th>Name</th>
             <th>Slug</th>
+            <th>Action</th>
           </tr>
         </thead>
         <tbody>
@@ -56,10 +111,57 @@ const Dashboard = () => {
               <td>{index + 1}</td>
               <td>{cat.name}</td>
               <td>{cat.slug}</td>
+              <td>
+                <button
+                  onClick={() => {
+                    setEditCategory({ id: cat.id, name: cat.name });
+                    setShowEditModal(true);
+                  }}
+                >
+                  Edit
+                </button>
+                <button
+                   onClick={() => handleDeleteCategory(cat.id)}
+                >Delete
+                </button>
+              </td>
             </tr>
           ))}
         </tbody>
       </table>
+
+      {showAddModal && (
+        <div className="modal">
+          <div className="modal-content">
+            <h3>Add Category</h3><br />
+            <input
+              type="text"
+              value={newCategoryName}
+              onChange={(e) => setNewCategoryName(e.target.value)}
+              placeholder="Category Name"
+            />
+            <button onClick={handleAddCategory} className='model-add-btn'>Save</button>
+            <button onClick={() => setShowAddModal(false)} className='model-cancel-btn'>Cancel</button>
+          </div>
+        </div>
+      )}
+
+      {showEditModal && (
+        <div className="modal">
+          <div className="modal-content">
+            <h3>Edit Category</h3>
+            <input
+              type="text"
+              value={editCategory.name}
+              onChange={(e) =>
+                setEditCategory({ ...editCategory, name: e.target.value })
+              }
+            />
+            <button onClick={handleUpdateCategory} className='model-add-btn'>Update</button>
+            <button onClick={() => setShowEditModal(false)} className='model-cancel-btn'>Cancel</button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

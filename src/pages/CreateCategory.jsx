@@ -1,37 +1,55 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
-const CreateCategory = ({ token, onCategoryCreated }) => {
+const CreateCategory = ({ onCategoryCreated }) => {
   const [name, setName] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const token = localStorage.getItem('token');
+
+    if (!token) {
+      console.error('No token found. Please login first.');
+      alert('Please log in before creating a category.');
+      return;
+    }
+
     try {
-      await axios.post('http://localhost:8000/api/categories', { name }, {
-        headers: {
-          Authorization: `Bearer ${token}`,
+      const res = await axios.post(
+        'http://localhost:8000/api/categories',
+        { name },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            Accept: 'application/json',
+          },
         }
-      });
+      );
+
       alert('Category created!');
+      console.log('Created Category:', res.data);
       setName('');
-      onCategoryCreated(); // refresh category list
+      if (onCategoryCreated) onCategoryCreated(); // refresh category list
     } catch (err) {
-      alert('Error creating category');
-      console.error(err);
+      console.error('Error creating category:', err.response?.data || err.message);
+      alert(`Error: ${err.response?.data?.message || 'Failed to create category'}`);
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="category-form">
-      <input
-        type="text"
-        placeholder="New Category"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-        required
-      />
-      <button type="submit">Add Category</button>
-    </form>
+    <div className="category-container">
+      
+      <form onSubmit={handleSubmit} className="category-form">
+        <input
+          type="text"
+          placeholder="New Category"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          required
+        />
+        <button type="submit">Add Category</button>
+      </form>
+    </div>
   );
 };
 
