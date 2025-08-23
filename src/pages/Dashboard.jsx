@@ -28,6 +28,8 @@ const Dashboard = () => {
 
   useEffect(() => {
      fetchCategories();
+     fetchPosts();
+     fetchUsers();
   }, []);
   
     const fetchCategories = async () => {
@@ -36,6 +38,22 @@ const Dashboard = () => {
       headers: { Authorization: `Bearer ${token}` },
     });
     setCategories(response.data);
+  };
+
+  const fetchPosts = async () => {
+    const token = localStorage.getItem("token");
+    const response = await axios.get("http://localhost:8000/api/posts", {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    setTotalPosts(response.data.length);
+  };
+
+  const fetchUsers = async () => {
+    const token = localStorage.getItem("token");
+    const response = await axios.get("http://localhost:8000/api/user", {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    setTotalUsers(response.data.length);
   };
 
   const handleAddCategory = async () => {
