@@ -70,6 +70,12 @@ export default function Posts(){
   >
     Add Post
   </button></Link> 
+  <Link to="/dashboard">
+  <button   
+    className="btn-add"
+  >
+    Dashboard
+  </button></Link> 
   <button
     onClick={handleLogout}
     className="btn-logout"

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios'; 
+import { Link,useNavigate } from 'react-router-dom';
 const Dashboard = () => {
   const token = localStorage.getItem('token'); 
   const [categories, setCategories] = useState([]);
@@ -102,12 +103,18 @@ const handleDeleteCategory = async (id) => {
   }
 }
 };
+const navigate = useNavigate();
+
+  const handleAddPost = () => { 
+    navigate('/createpost');
+  };
   return (
     <div className="dashboard-container"> 
  <button onClick={() => setShowAddModal(true)} className='btn-add'>+Add Category</button>
+ <button onClick={handleAddPost} style={{marginLeft:'23px'}} className='btn-add'>+Add Post</button>
       <h2>Dashboard</h2>
       <div className="stats">
-        <div className="stat-box">📄 Posts: {totalPosts}</div>
+        <div className="stat-box"><Link to="/posts" style={{textDecoration:' none'}}>📄 Posts: {totalPosts}</Link> </div>
         <div className="stat-box">📂 Categories: {categories.length}</div>
         <div className="stat-box">👤 Users: {totalUsers}</div>
       </div>

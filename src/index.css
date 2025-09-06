@@ -437,3 +437,20 @@ form button:hover {
   padding:8px;
   background-color: #da1313;
 }
+
+.button-group {
+  display: flex;
+  gap: 10px; /* space between buttons */
+  margin-top: 10px;
+}
+ 
+
+.btn-primary {
+  background-color: #2563eb; /* blue */
+  color: white;
+}
+
+.btn-secondary {
+  background-color: #e5e7eb; /* light gray */
+  color: black;
+}
