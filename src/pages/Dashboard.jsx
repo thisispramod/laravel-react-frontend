@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios'; 
 import { Link,useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2';
 const Dashboard = () => {
   const token = localStorage.getItem('token'); 
   const [categories, setCategories] = useState([]);
@@ -67,6 +68,12 @@ const Dashboard = () => {
       );
       setShowAddModal(false);
       setNewCategoryName("");
+      Swal.fire({
+        title: "Success!",
+        text: "Category created successfully 🎉",
+        icon: "success",
+        confirmButtonText: "OK", 
+      });
       fetchCategories();
     } catch (error) {
       console.error(error);
@@ -83,14 +90,28 @@ const Dashboard = () => {
       );
       setShowEditModal(false);
       fetchCategories();
+      Swal.fire(
+        'Updated!',
+        'Category has been updated.',
+        'success'
+      );
     } catch (error) {
       console.error(error);
     }
   };
   
 const handleDeleteCategory = async (id) => {
-  const cnf = window.confirm("Are You Sure Want To Delete?");
-  if(cnf){
+    const result = await Swal.fire({
+    title: 'Are you sure?',
+    text: "You won't be able to revert this!",
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Yes, delete it!',
+    cancelButtonText: 'No, cancel'
+  });
+  if(result.isConfirmed){
   try {
     const token = localStorage.getItem("token");
     await axios.delete(
@@ -98,8 +119,18 @@ const handleDeleteCategory = async (id) => {
       { headers: { Authorization: `Bearer ${token}` } }
     ); 
     fetchCategories();
+     Swal.fire(
+        'Deleted!',
+        'Category has been deleted.',
+        'success'
+      );
   } catch (error) {
     console.error(error);
+    Swal.fire(
+        'Error!',
+        'Something went wrong while deleting.',
+        'error'
+      );
   }
 }
 };

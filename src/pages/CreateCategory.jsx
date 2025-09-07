@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
+
 const CreateCategory = ({ onCategoryCreated }) => {
   const [name, setName] = useState('');
 
@@ -25,8 +26,13 @@ const CreateCategory = ({ onCategoryCreated }) => {
           },
         }
       );
-
-      alert('Category created!');
+ 
+      Swal.fire({
+        title: "Success!",
+        text: "Category created successfully 🎉",
+        icon: "success",
+        confirmButtonText: "OK", 
+      });
       console.log('Created Category:', res.data);
       setName('');
       if (onCategoryCreated) onCategoryCreated(); // refresh category list
